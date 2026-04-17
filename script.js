@@ -6,7 +6,8 @@ let state = JSON.parse(localStorage.getItem('aggm_state')) || {
         overestimate: false,
         underestimatePro: true,
         underestimateBurned: true,
-        underestimateMaintenance: false
+        underestimateMaintenance: false,
+        extraBuffer: 0
     }
 };
 
@@ -65,7 +66,7 @@ function updateUI() {
     const goalCal = calculateTargetGoal();
     const targetPro = calculateProteinTarget();
     
-    let consumedCal = 0;
+    let consumedCal = state.settings.extraBuffer || 0;
     let consumedPro = 0;
     let waterGlasses = 0;
     let burnedKcal = 0;
@@ -131,6 +132,22 @@ function updateUI() {
     const fitProg = (burnedKcal / 500);
     document.getElementById('fit-progress').style.strokeDashoffset = 283 - (Math.min(fitProg, 1) * 283);
 
+    // Muscle Repair Efficiency Logic
+    const pGramsPerLb = consumedPro / state.user.weight;
+    const repairEff = pGramsPerLb / (0.8 + pGramsPerLb);
+    const repairPercent = Math.round(repairEff * 100);
+    
+    document.getElementById('repair-efficiency').innerText = `${repairPercent}%`;
+    document.getElementById('repair-bar').style.width = `${repairPercent}%`;
+    
+    let repairMsg = "Protein is just one limiter. Hitting 8+ hours of sleep is key.";
+    if (pGramsPerLb < 0.4) repairMsg = "Underfed: Recovery limited. Aim for 8+ hours of sleep.";
+    else if (pGramsPerLb < 0.8) repairMsg = "Developing: Solid rest (8h+) will maximize these gains.";
+    else if (pGramsPerLb < 1.2) repairMsg = "Solid: Optimal protein. 8+ hours of sleep is the final key.";
+    else repairMsg = "Diminishing Returns: You're capped on protein; prioritize 8h+ sleep.";
+    
+    document.getElementById('repair-status').innerText = repairMsg;
+
     const logItems = document.getElementById('log-items');
     logItems.innerHTML = todayLogs.map((log) => `
         <div class="log-item">
@@ -178,6 +195,9 @@ function updateUI() {
     document.getElementById('toggle-underestimate').checked = state.settings.underestimatePro;
     document.getElementById('toggle-underestimate-burned').checked = state.settings.underestimateBurned;
     document.getElementById('toggle-underestimate-maintenance').checked = state.settings.underestimateMaintenance;
+    document.getElementById('extra-buffer-slider').value = state.settings.extraBuffer || 0;
+    document.getElementById('extra-buffer-value').innerText = state.settings.extraBuffer || 0;
+    syncSliderColor();
 
     if (state.user.pfp) {
         document.getElementById('profile-pic-large').src = state.user.pfp;
@@ -224,7 +244,7 @@ function renderCalendar() {
         const isToday = dateStr === new Date().toDateString();
         const dayLogs = state.logs.filter(l => new Date(l.date).toDateString() === dateStr);
         const dayWorkouts = state.workouts.filter(w => new Date(w.date).toDateString() === dateStr);
-        let consumed = 0;
+        let consumed = state.settings.extraBuffer || 0;
         let protein = 0;
         let waterCount = 0;
         dayLogs.forEach(l => { 
@@ -359,9 +379,24 @@ document.getElementById('save-settings').addEventListener('click', () => {
     state.settings.underestimatePro = document.getElementById('toggle-underestimate').checked;
     state.settings.underestimateBurned = document.getElementById('toggle-underestimate-burned').checked;
     state.settings.underestimateMaintenance = document.getElementById('toggle-underestimate-maintenance').checked;
+    state.settings.extraBuffer = parseInt(document.getElementById('extra-buffer-slider').value);
     save();
     alert('Settings saved!');
 });
+
+document.getElementById('extra-buffer-slider').oninput = (e) => {
+    document.getElementById('extra-buffer-value').innerText = e.target.value;
+    syncSliderColor();
+};
+
+function syncSliderColor() {
+    const slider = document.getElementById('extra-buffer-slider');
+    const val = slider.value;
+    const min = slider.min || 0;
+    const max = slider.max || 100;
+    const percent = ((val - min) / (max - min)) * 100;
+    slider.style.setProperty('--range-progress', percent + '%');
+}
 
 document.getElementById('reset-app').addEventListener('click', () => {
     if (confirm('Are you sure you want to reset everything?')) {
