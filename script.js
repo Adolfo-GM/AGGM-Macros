@@ -98,8 +98,8 @@ function updateUI() {
     
     const waterML = waterGlasses * 250;
     const waterL = (waterML / 1000).toFixed(1);
-    document.getElementById('water-text').innerText = `${waterGlasses} / 8 glasses (${waterML}ml / ${waterL}L)`;
-    document.getElementById('water-bar').style.width = `${Math.min((waterGlasses / 8) * 100, 100)}%`;
+    document.getElementById('water-text').innerText = `${waterGlasses} / 10 glasses (${waterML}ml / ${waterL}L)`;
+    document.getElementById('water-bar').style.width = `${Math.min((waterGlasses / 10) * 100, 100)}%`;
 
     const netBalance = consumedCal - (maintenance + burnedKcal);
     const lbsShift = (netBalance / 3500).toFixed(3);
@@ -197,6 +197,8 @@ function updateUI() {
     document.getElementById('toggle-underestimate-maintenance').checked = state.settings.underestimateMaintenance;
     document.getElementById('extra-buffer-slider').value = state.settings.extraBuffer || 0;
     document.getElementById('extra-buffer-value').innerText = state.settings.extraBuffer || 0;
+    document.getElementById('edit-target-weeks').value = state.user.targetWeeks || 12;
+    validateTimeline();
     syncSliderColor();
 
     if (state.user.pfp) {
@@ -288,6 +290,22 @@ document.getElementById('start-btn').addEventListener('click', () => {
     }
 });
 
+function autoFillWeeks() {
+    const w = parseFloat(document.getElementById('setup-weight').value);
+    const tw = parseFloat(document.getElementById('setup-target-weight').value);
+    if (w && tw) {
+        const diff = Math.abs(w - tw);
+        if (diff > 0) {
+            // Default to ~1.5 lbs per week for a solid but achievable pace
+            const weeks = Math.ceil(diff / 1.5);
+            document.getElementById('setup-target-weeks').value = weeks;
+        }
+    }
+}
+
+document.getElementById('setup-weight').addEventListener('input', autoFillWeeks);
+document.getElementById('setup-target-weight').addEventListener('input', autoFillWeeks);
+
 navItems.forEach(item => {
     item.addEventListener('click', () => {
         const viewId = item.getAttribute('data-view');
@@ -375,6 +393,7 @@ document.getElementById('save-settings').addEventListener('click', () => {
     state.user.weight = parseInt(document.getElementById('edit-weight').value);
     state.user.height = parseInt(document.getElementById('edit-height').value);
     state.user.targetWeight = parseInt(document.getElementById('edit-target-weight').value);
+    state.user.targetWeeks = parseInt(document.getElementById('edit-target-weeks').value);
     state.settings.overestimate = document.getElementById('toggle-overestimate').checked;
     state.settings.underestimatePro = document.getElementById('toggle-underestimate').checked;
     state.settings.underestimateBurned = document.getElementById('toggle-underestimate-burned').checked;
@@ -383,6 +402,25 @@ document.getElementById('save-settings').addEventListener('click', () => {
     save();
     alert('Settings saved!');
 });
+
+function validateTimeline() {
+    const weeks = parseInt(document.getElementById('edit-target-weeks').value);
+    const weightDiff = Math.abs(state.user.targetWeight - state.user.weight);
+    const lbsPerWeek = weightDiff / weeks;
+    const tipEl = document.getElementById('timeline-tip');
+    
+    if (lbsPerWeek > 2) {
+        tipEl.innerText = `Tip: Losing >2 lbs/week is very aggressive. Consider ${Math.ceil(weightDiff / 1.5)}-20 weeks for sustainability.`;
+        tipEl.style.display = 'block';
+    } else if (lbsPerWeek < 0.2 && weightDiff > 0) {
+        tipEl.innerText = `Tip: This is a very slow pace. You might find it hard to see progress.`;
+        tipEl.style.display = 'block';
+    } else {
+        tipEl.style.display = 'none';
+    }
+}
+
+document.getElementById('edit-target-weeks')?.addEventListener('input', validateTimeline);
 
 document.getElementById('extra-buffer-slider').oninput = (e) => {
     document.getElementById('extra-buffer-value').innerText = e.target.value;
