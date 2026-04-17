@@ -89,50 +89,61 @@ const foods = [
     { name: 'Pumpkin Seeds', cal: 559, pro: 30, unit: '100g' },
     { name: 'Chia Seeds', cal: 486, pro: 17, unit: '100g' },
     
-    /* ADDITIONS */
     { name: 'Orange Juice', cal: 45, pro: 0.7, unit: '100ml' },
     { name: 'Apple Juice', cal: 46, pro: 0.1, unit: '100ml' },
     { name: 'Grape Juice', cal: 60, pro: 0.4, unit: '100ml' },
-    { name: 'Cranberry Juice', cal: 46, pro: 0.4, unit: '100ml' },
     { name: 'Coca Cola', cal: 42, pro: 0, unit: '100ml' },
     { name: 'Espresso', cal: 1, pro: 0.1, unit: 'shot' },
-    { name: 'Cappuccino', cal: 80, pro: 4, unit: 'cup' },
     { name: 'Beer', cal: 43, pro: 0.5, unit: '100ml' },
     { name: 'Wine (Red)', cal: 85, pro: 0.1, unit: '100ml' },
     
     { name: 'Saltine Crackers', cal: 13, pro: 0.2, unit: 'cracker' },
-    { name: 'Wheat Thins', cal: 140, pro: 2, unit: '16 pieces' },
-    { name: 'Ritz Crackers', cal: 16, pro: 0.2, unit: 'cracker' },
     { name: 'Pretzels', cal: 380, pro: 10, unit: '100g' },
     { name: 'Potato Chips', cal: 536, pro: 7, unit: '100g' },
-    { name: 'Tortilla Chips', cal: 465, pro: 7, unit: '100g' },
     
     { name: 'Corn Tortilla', cal: 50, pro: 1, unit: 'piece' },
     { name: 'Flour Tortilla (Large)', cal: 200, pro: 5, unit: 'piece' },
     { name: 'Taco (Beef)', cal: 210, pro: 10, unit: 'piece' },
-    { name: 'Taco (Chicken)', cal: 180, pro: 12, unit: 'piece' },
     { name: 'Burrito (Beef/Bean)', cal: 450, pro: 20, unit: 'piece' },
-    { name: 'Quesadilla (Cheese)', cal: 350, pro: 15, unit: 'piece' },
-    { name: 'Enchilada', cal: 160, pro: 8, unit: 'piece' },
     
     { name: 'Bagel', cal: 250, pro: 10, unit: 'piece' },
     { name: 'Croissant', cal: 231, pro: 5, unit: 'piece' },
-    { name: 'Muffin (Blueberry)', cal: 377, pro: 5, unit: 'piece' },
     { name: 'Pancakes', cal: 227, pro: 6, unit: '100g' },
     { name: 'Waffle', cal: 291, pro: 8, unit: 'piece' },
     
-    { name: 'Sushi (California Roll)', cal: 255, pro: 9, unit: '8 pieces' },
     { name: 'Sushi (Salmon Nigiri)', cal: 50, pro: 3, unit: 'piece' },
     { name: 'Ramen', cal: 436, pro: 10, unit: 'pack' },
-    { name: 'Pad Thai', cal: 357, pro: 15, unit: '100g' },
-    { name: 'Spring Roll', cal: 154, pro: 3, unit: 'piece' },
-    
-    { name: 'Lasagna', cal: 135, pro: 8, unit: '100g' },
-    { name: 'Spaghetti Bolognese', cal: 150, pro: 7, unit: '100g' },
     { name: 'Mac & Cheese', cal: 164, pro: 7, unit: '100g' },
     
     { name: 'Ice Cream (Vanilla)', cal: 201, pro: 3.5, unit: '100g' },
     { name: 'Cookie (Chippie)', cal: 50, pro: 0.5, unit: 'piece' },
-    { name: 'Brownie', cal: 466, pro: 5, unit: '100g' },
-    { name: 'Donut (Glazed)', cal: 190, pro: 2, unit: 'piece' }
+    { name: 'Donut (Glazed)', cal: 190, pro: 2, unit: 'piece' },
+
+    /* SEASONINGS & OTHERS */
+    { name: 'Cinnamon', cal: 6, pro: 0.1, unit: 'tsp' },
+    { name: 'Garlic Powder', cal: 10, pro: 0.5, unit: 'tsp' },
+    { name: 'Onion Powder', cal: 8, pro: 0.2, unit: 'tsp' },
+    { name: 'Black Pepper', cal: 6, pro: 0, unit: 'tsp' },
+    { name: 'Maple Syrup', cal: 52, pro: 0, unit: 'tbsp' },
+    { name: 'Cream Cheese', cal: 50, pro: 1, unit: 'tbsp' },
+    { name: 'Sour Cream', cal: 30, pro: 0.3, unit: 'tbsp' },
+    { name: 'Ranch Dressing', cal: 73, pro: 0.4, unit: 'tbsp' },
+    { name: 'Hot Sauce', cal: 1, pro: 0, unit: 'tsp' },
+    
+    /* MORE FRUITS & VEGGIES */
+    { name: 'Raspberries', cal: 52, pro: 1.2, unit: '100g' },
+    { name: 'Peach', cal: 39, pro: 0.9, unit: '100g' },
+    { name: 'Pear', cal: 57, pro: 0.4, unit: '100g' },
+    { name: 'Zucchini', cal: 17, pro: 1.2, unit: '100g' },
+    { name: 'Corn', cal: 86, pro: 3.2, unit: '100g' },
+    { name: 'Brussels Sprouts', cal: 43, pro: 3.4, unit: '100g' },
+    
+    /* FAST FOOD & SNACKS */
+    { name: 'Big Mac', cal: 563, pro: 26, unit: 'piece' },
+    { name: 'Quarter Pounder', cal: 520, pro: 30, unit: 'piece' },
+    { name: 'Cheeseburger', cal: 300, pro: 15, unit: 'piece' },
+    { name: 'McNuggets (6pc)', cal: 250, pro: 13, unit: '6 pieces' },
+    { name: 'Oreo Cookie', cal: 53, pro: 0.5, unit: 'piece' },
+    { name: 'Doritos', cal: 150, pro: 2, unit: '28g bag' },
+    { name: 'Greek Yogurt (Strawberry)', cal: 80, pro: 12, unit: '150g' }
 ];

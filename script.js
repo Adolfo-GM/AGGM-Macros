@@ -8,7 +8,8 @@ let state = JSON.parse(localStorage.getItem('aggm_state')) || {
         underestimateBurned: true,
         underestimateMaintenance: false,
         extraBuffer: 0
-    }
+    },
+    workouts: []
 };
 
 const views = document.querySelectorAll('.view');
@@ -42,6 +43,7 @@ function calculateBaseMaintenance() {
 function calculateTargetGoal() {
     if (!state.user) return 0;
     const maintenance = calculateBaseMaintenance();
+    if (!state.user || !state.user.targetWeeks) return maintenance;
     const weightDiff = state.user.targetWeight - state.user.weight;
     const dailyAdjustment = (weightDiff * 3500) / (state.user.targetWeeks * 7);
     return Math.round(maintenance + dailyAdjustment);
@@ -245,7 +247,7 @@ function renderCalendar() {
         const dateStr = new Date(year, month, day).toDateString();
         const isToday = dateStr === new Date().toDateString();
         const dayLogs = state.logs.filter(l => new Date(l.date).toDateString() === dateStr);
-        const dayWorkouts = state.workouts.filter(w => new Date(w.date).toDateString() === dateStr);
+        const dayWorkouts = (state.workouts || []).filter(w => new Date(w.date).toDateString() === dateStr);
         let consumed = state.settings.extraBuffer || 0;
         let protein = 0;
         let waterCount = 0;
@@ -290,21 +292,42 @@ document.getElementById('start-btn').addEventListener('click', () => {
     }
 });
 
-function autoFillWeeks() {
+function updateSetupTips() {
+    const h = parseFloat(document.getElementById('setup-height').value);
     const w = parseFloat(document.getElementById('setup-weight').value);
     const tw = parseFloat(document.getElementById('setup-target-weight').value);
+    
+    // Target Weight Tip
+    const targetTipEl = document.getElementById('setup-weight-tip');
+    if (h) {
+        const hM = h / 100;
+        const minLbs = Math.round((18.5 * (hM * hM)) / 0.453592);
+        const maxLbs = Math.round((25 * (hM * hM)) / 0.453592);
+        targetTipEl.innerText = `Tip: For your height, a healthy athletic range is typically ${minLbs} - ${maxLbs} lbs.`;
+        targetTipEl.style.display = 'block';
+    } else {
+        targetTipEl.style.display = 'none';
+    }
+
+    // Weeks Tip
+    const weeksTipEl = document.getElementById('setup-weeks-tip');
     if (w && tw) {
         const diff = Math.abs(w - tw);
         if (diff > 0) {
-            // Default to ~1.5 lbs per week for a solid but achievable pace
-            const weeks = Math.ceil(diff / 1.5);
-            document.getElementById('setup-target-weeks').value = weeks;
+            const recWeeks = Math.ceil(diff / 1.5);
+            weeksTipEl.innerText = `Tip: Losing ~1.5 lbs/week is optimal. Recommended: ${recWeeks} weeks.`;
+            weeksTipEl.style.display = 'block';
+        } else {
+            weeksTipEl.style.display = 'none';
         }
+    } else {
+        weeksTipEl.style.display = 'none';
     }
 }
 
-document.getElementById('setup-weight').addEventListener('input', autoFillWeeks);
-document.getElementById('setup-target-weight').addEventListener('input', autoFillWeeks);
+document.getElementById('setup-height').addEventListener('input', updateSetupTips);
+document.getElementById('setup-weight').addEventListener('input', updateSetupTips);
+document.getElementById('setup-target-weight').addEventListener('input', updateSetupTips);
 
 navItems.forEach(item => {
     item.addEventListener('click', () => {
