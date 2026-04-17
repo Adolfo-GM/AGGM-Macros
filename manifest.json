@@ -1,0 +1,16 @@
+{
+  "name": "AGGM Macros",
+  "short_name": "AGGM",
+  "description": "Sleek calorie and macro tracker",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#007AFF",
+  "icons": [
+    {
+      "src": "logo.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

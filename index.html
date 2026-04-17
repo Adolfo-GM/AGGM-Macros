@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>AGGM Macros</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="apple-touch-icon" href="logo.png">
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div id="app">
+        <div id="setup-screen" class="screen active">
+            <div class="setup-container">
+                <img src="logo.png" alt="Logo" class="setup-logo">
+                <h1>Welcome to AGGM Macros</h1>
+                <p>Let's set up your profile</p>
+                <div class="setup-form">
+                    <input type="text" id="setup-name" placeholder="Name">
+                    <select id="setup-gender">
+                        <option value="" disabled selected>Gender</option>
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                    </select>
+                    <input type="number" id="setup-age" placeholder="Age">
+                    <input type="number" id="setup-height" placeholder="Height (cm)">
+                    <input type="number" id="setup-weight" placeholder="Weight (lbs)">
+                    <input type="number" id="setup-target-weight" placeholder="Target Weight (lbs)">
+                    <input type="number" id="setup-target-weeks" placeholder="Weeks to reach target">
+                    <button id="start-btn">Get Started</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="main-screen" class="screen">
+            <header>
+                <div class="status-bar-spacer"></div>
+                <div class="header-content">
+                    <h1 id="page-title">Summary</h1>
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                        <button id="calendar-btn" class="icon-btn">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                        </button>
+                        <div id="profile-trigger" class="profile-pic-mini"></div>
+                    </div>
+                </div>
+            </header>
+
+            <main>
+                <section id="log-view" class="view active">
+                    <div class="summary-card">
+                        <div class="calories-ring">
+                            <svg viewBox="0 0 100 100">
+                                <circle class="bg" cx="50" cy="50" r="45"></circle>
+                                <circle class="progress" cx="50" cy="50" r="45" id="cal-progress"></circle>
+                            </svg>
+                            <div class="cal-text">
+                                <span id="cal-remaining">0</span>
+                                <small>kcal left</small>
+                            </div>
+                        </div>
+                        <div class="macro-stats">
+                            <div class="macro">
+                                <span>Protein</span>
+                                <div class="bar-bg">
+                                    <div id="protein-bar" class="bar"></div>
+                                </div>
+                                <span id="protein-text">0 / 0g</span>
+                            </div>
+                            <div class="macro">
+                                <span>Water</span>
+                                <div class="bar-bg"><div id="water-bar" class="bar" style="background: #007AFF;"></div></div>
+                                <span id="water-text">0 / 8 glasses</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="action-buttons">
+                        <button id="add-food-btn" class="fab">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2.5">
+                                <line x1="12" y1="5" x2="12" y2="19"></line>
+                                <line x1="5" y1="12" x2="19" y2="12"></line>
+                            </svg>
+                            Food
+                        </button>
+                        <button id="add-water-btn" class="fab secondary">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2.5">
+                                <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"></path>
+                            </svg>
+                            Water
+                        </button>
+                    </div>
+
+                    <div class="log-list">
+                        <h3>Today's Log</h3>
+                        <div id="log-items"></div>
+                    </div>
+                </section>
+
+                <section id="fitness-view" class="view">
+                    <div class="summary-card fitness-card">
+                        <div class="calories-ring fitness-ring">
+                            <svg viewBox="0 0 100 100">
+                                <circle class="bg" cx="50" cy="50" r="45"></circle>
+                                <circle class="progress" cx="50" cy="50" r="45" id="fit-progress"></circle>
+                            </svg>
+                            <div class="cal-text">
+                                <span id="fit-balance">0</span>
+                                <small>kcal balance</small>
+                            </div>
+                        </div>
+                        <div class="macro-stats">
+                            <div id="deficit-status">Searching for balance...</div>
+                            <div id="fitness-breakdown" class="fitness-breakdown"></div>
+                            <div class="weight-prediction" id="weight-prediction">
+                                Expecting to gain 0.0 lbs today
+                            </div>
+                        </div>
+                    </div>
+
+                    <button id="add-workout-btn" class="fab primary-btn" style="width: 100%; margin-bottom: 24px;">
+                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="currentColor"><path d="m826-585-56-56 30-31-128-128-31 30-57-57 30-31q23-23 57-22.5t57 23.5l129 129q23 23 23 56.5T857-615l-31 30ZM346-104q-23 23-56.5 23T233-104L104-233q-23-23-23-56.5t23-56.5l30-30 57 57-31 30 129 129 30-31 57 57-30 30Zm397-336 57-57-303-303-57 57 303 303ZM463-160l57-58-302-302-58 57 303 303Zm-6-234 110-109-64-64-109 110 63 63Zm63 290q-23 23-57 23t-57-23L104-406q-23-23-23-57t23-57l57-57q23-23 56.5-23t56.5 23l63 63 110-110-63-62q-23-23-23-57t23-57l57-57q23-23 56.5-23t56.5 23l303 303q23 23 23 56.5T857-441l-57 57q-23 23-57 23t-57-23l-62-63-110 110 63 63q23 23 23 56.5T577-161l-57 57Z"/></svg>
+                        Log Workout
+                    </button>
+
+                    <div class="log-list">
+                        <h3>Workouts Today</h3>
+                        <div id="workout-items"></div>
+                    </div>
+                </section>
+
+                <section id="profile-view" class="view">
+                    <div class="profile-header">
+                        <div class="profile-pic-container">
+                            <img id="profile-pic-large" src="logo.png" alt="Profile">
+                            <label for="pfp-upload" class="upload-btn">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white"
+                                    stroke-width="2">
+                                    <path
+                                        d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z">
+                                    </path>
+                                    <circle cx="12" cy="13" r="4"></circle>
+                                </svg>
+                            </label>
+                            <input type="file" id="pfp-upload" accept="image/*" hidden>
+                        </div>
+                        <h2 id="display-name">User Name</h2>
+                    </div>
+
+                    <div class="settings-group">
+                        <div class="setting-item">
+                            <span>Weight (lbs)</span>
+                            <input type="number" id="edit-weight">
+                        </div>
+                        <div class="setting-item">
+                            <span>Height (cm)</span>
+                            <input type="number" id="edit-height">
+                        </div>
+                        <div class="setting-item">
+                            <span>Target Weight (lbs)</span>
+                            <input type="number" id="edit-target-weight">
+                        </div>
+                    </div>
+
+                    <div class="settings-group">
+                        <div class="setting-item">
+                            <span>Over-estimate Calories (15%)</span>
+                            <label class="switch">
+                                <input type="checkbox" id="toggle-overestimate">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="setting-item">
+                            <span>Under-estimate Protein (15%)</span>
+                            <label class="switch">
+                                <input type="checkbox" id="toggle-underestimate" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="setting-item">
+                            <span>Under-estimate Maintenance (15%)</span>
+                            <label class="switch">
+                                <input type="checkbox" id="toggle-underestimate-maintenance">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="setting-item">
+                            <span>Under-estimate Calories Burned (15%)</span>
+                            <label class="switch">
+                                <input type="checkbox" id="toggle-underestimate-burned" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <button id="save-settings" class="primary-btn">Save Changes</button>
+                    <button id="reset-app" class="danger-btn">Reset App Data</button>
+                </section>
+            </main>
+
+            <nav class="bottom-nav">
+                <button class="nav-item active" data-view="log-view">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                    <span>Log</span>
+                </button>
+                <button class="nav-item" data-view="fitness-view">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="currentColor"><path d="m826-585-56-56 30-31-128-128-31 30-57-57 30-31q23-23 57-22.5t57 23.5l129 129q23 23 23 56.5T857-615l-31 30ZM346-104q-23 23-56.5 23T233-104L104-233q-23-23-23-56.5t23-56.5l30-30 57 57-31 30 129 129 30-31 57 57-30 30Zm397-336 57-57-303-303-57 57 303 303ZM463-160l57-58-302-302-58 57 303 303Zm-6-234 110-109-64-64-109 110 63 63Zm63 290q-23 23-57 23t-57-23L104-406q-23-23-23-57t23-57l57-57q23-23 56.5-23t56.5 23l63 63 110-110-63-62q-23-23-23-57t23-57l57-57q23-23 56.5-23t56.5 23l303 303q23 23 23 56.5T857-441l-57 57q-23 23-57 23t-57-23l-62-63-110 110 63 63q23 23 23 56.5T577-161l-57 57Z"/></svg>
+                    <span>Fitness</span>
+                </button>
+                <button class="nav-item" data-view="profile-view">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                    <span>Settings</span>
+                </button>
+            </nav>
+        </div>
+
+        <div id="food-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Add Food</h2>
+                    <button class="close-modal">&times;</button>
+                </div>
+                <div class="food-search">
+                    <input type="text" id="food-input" placeholder="What did you eat?">
+                </div>
+                <div class="food-list" id="food-suggestions"></div>
+            </div>
+        </div>
+
+        <div id="workout-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Log Workout</h2>
+                    <button class="close-modal">&times;</button>
+                </div>
+                <div class="setup-form">
+                    <select id="workout-type">
+                        <option value="Indoor Walk">Indoor Walk</option>
+                        <option value="Outdoor Walk">Outdoor Walk</option>
+                        <option value="Indoor Run">Indoor Run</option>
+                        <option value="Outdoor Run">Outdoor Run</option>
+                        <option value="Traditional Strength Training">Traditional Strength Training</option>
+                        <option value="Cycling">Cycling</option>
+                        <option value="Basketball">Basketball</option>
+                        <option value="Swimming">Swimming</option>
+                        <option value="HIIT">HIIT</option>
+                        <option value="Yoga">Yoga</option>
+                        <option value="Other">Other</option>
+                    </select>
+                    <input type="number" id="workout-kcal" placeholder="Kcals burned (Apple Watch)">
+                    <button id="save-workout" class="primary-btn">Save Workout</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="calendar-modal" class="modal">
+            <div class="modal-content" style="height: 80vh; overflow-y: auto;">
+                <div class="modal-header">
+                    <h2>History</h2>
+                    <button class="close-modal">&times;</button>
+                </div>
+                <div class="calendar-header" id="calendar-month-year">
+                    April 2026
+                </div>
+                <div class="calendar-grid-header">
+                    <div>S</div><div>M</div><div>T</div><div>W</div><div>T</div><div>F</div><div>S</div>
+                </div>
+                <div class="calendar-grid" id="calendar-grid"></div>
+            </div>
+        </div>
+    </div>
+    <script src="foods.js"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>
